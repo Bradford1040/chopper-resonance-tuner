@@ -1,4 +1,5 @@
-chopper-resonance-tuner/*
 .idea/*
 *.csv
 .venv
+*.bak
+*.old
