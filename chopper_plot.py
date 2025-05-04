@@ -44,15 +44,15 @@ def parse_arguments():
 def calc_static_magnitude(file):
     data = np.array([
         [float(row["accel_x"]),
-         float(row["accel_y"]),
-         float(row["accel_z"])] for row in csv.DictReader(file)])
+        float(row["accel_y"]),
+        float(row["accel_z"])] for row in csv.DictReader(file)])
     return np.mean(data, axis=0)
 
 def calc_magnitude(file, static_data):
     data = np.array([
         [float(row["accel_x"]),
-         float(row["accel_y"]),
-         float(row["accel_z"])] for row in csv.DictReader(file)]) - static_data
+        float(row["accel_y"]),
+        float(row["accel_z"])] for row in csv.DictReader(file)]) - static_data
     trim_size = len(data) // CUTOFF_RANGE
     data = data[trim_size:-trim_size]
     md_magnitude = np.median(np.linalg.norm(data, axis=1))
@@ -104,7 +104,7 @@ def main():
             color = colors[toff if toff <= 8 else toff - 8]
             fig.add_trace(go.Bar(x=[entry[1]], y=[entry[0]], marker_color=color, orientation='h', showlegend=False))
         fig.update_layout(title='Median Magnitude vs Parameters', xaxis_title='Median Magnitude',
-                          yaxis_title='Parameters', coloraxis_showscale=True)
+                        yaxis_title='Parameters', coloraxis_showscale=True)
         plot_html_path = os.path.join(RESULTS_FOLDER, f'{name}interactive_plot_{accel_chip}_tmc{driver}_{sense_resistor}_{now}.html')
         pio.write_html(fig, plot_html_path, auto_open=False)
         speed1 = params[1][0][0].split('_')[6].split('=')[1]

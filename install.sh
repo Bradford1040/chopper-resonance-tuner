@@ -62,18 +62,18 @@ if [ -f "$blk_path" ]; then
     if ! grep -q "^\[update_manager $repo\]$" "$blk_path"; then
         read -p " Do you want to install updater? (y/n): " answer
         if [ "$answer" != "${answer#[Yy]}" ]; then
-          sudo service moonraker stop
-          sed -i "\$a \ " "$blk_path"
-          sed -i "\$a [update_manager $repo]" "$blk_path"
-          sed -i "\$a type: git_repo" "$blk_path"
-          sed -i "\$a path: $repo_path" "$blk_path"
-          sed -i "\$a origin: https://github.com/Bradford1040/$repo.git" "$blk_path"
-          sed -i "\$a primary_branch: main" "$blk_path"
-          sed -i "\$a managed_services: klipper" "$blk_path"
-          # echo "Including [update_manager] to $blk_path successfully complete"
-          sudo service moonraker start
+        sudo service moonraker stop
+        sed -i "\$a \ " "$blk_path"
+        sed -i "\$a [update_manager $repo]" "$blk_path"
+        sed -i "\$a type: git_repo" "$blk_path"
+        sed -i "\$a path: $repo_path" "$blk_path"
+        sed -i "\$a origin: https://github.com/Bradford1040/$repo.git" "$blk_path"
+        sed -i "\$a primary_branch: main" "$blk_path"
+        sed -i "\$a managed_services: klipper" "$blk_path"
+        # echo "Including [update_manager] to $blk_path successfully complete"
+        sudo service moonraker start
         else
-          echo "Installing updater aborted"
+        echo "Installing updater aborted"
         fi
     else
         echo "Including [update_manager] aborted, [update_manager] already exists in $blk_path"
