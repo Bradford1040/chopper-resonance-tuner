@@ -85,4 +85,4 @@ sudo apt-get install python3-venv libatlas-base-dev libopenblas-dev
 # Reuse system libraries
 python3 -m venv --system-site-packages $repo_path/.venv
 source $repo_path/.venv/bin/activate
-pip install -r $repo_path/wiki/requirements.txt
+pip install -r $repo_path/requirements.txt
