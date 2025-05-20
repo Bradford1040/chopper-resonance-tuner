@@ -3,3 +3,5 @@
 .venv
 *.bak
 *.old
+pythonProject/*
+.mypy_cache
