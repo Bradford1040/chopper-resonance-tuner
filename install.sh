@@ -70,7 +70,7 @@ if [ -f "$blk_path" ]; then
         sed -i "\$a path: $repo_path" "$blk_path"
         sed -i "\$a origin: https://github.com/Bradford1040/$repo.git" "$blk_path"
         sed -i "\$a primary_branch: main" "$blk_path"
-        sed -i "\$a managed_systemctls: klipper" "$blk_path"
+        sed -i "\$a managed_services: klipper" "$blk_path"
         # echo "Including [update_manager] to $blk_path successfully complete"
         sudo systemctl moonraker start
         else
