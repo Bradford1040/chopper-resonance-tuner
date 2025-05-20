@@ -1,8 +1,9 @@
 #!/bin/bash
+set -e
 repo=chopper-resonance-tuner
 
-script_path=$(realpath $(echo $0))
-repo_path=$(dirname $script_path)
+script_path=$(realpath "$(cmd "$0")")
+repo_path=$(dirname "$script_path")
 
 # Сворачивание от root
 if [ "$(id -u)" = "0" ]; then
@@ -35,10 +36,10 @@ ln -srf "$repo_path/$cfg_name" $cfg_path # Перезапись
 # Добавление строки [include] в printer.cfg
 if [ -f "$cfg_incl_path" ]; then
     if ! grep -q "^\[include $cfg_name\]$" "$cfg_incl_path"; then
-        sudo service klipper stop
+        sudo systemctl klipper stop
         sed -i "1i\[include $cfg_name]" "$cfg_incl_path"
         # echo "Including $cfg_name to $cfg_incl_path successfully complete"
-        sudo service klipper start
+        sudo systemctl klipper start
     else
         echo "Including $cfg_name aborted, $cfg_name already exists in $cfg_incl_path"
     fi
@@ -47,10 +48,10 @@ fi
 # Добавление строки [respond] в printer.cfg
 if [ -f "$cfg_incl_path" ]; then
     if ! grep -q "^\[respond\]$" "$cfg_incl_path"; then
-        sudo service klipper stop
+        sudo systemctl klipper stop
         sed -i "1i\[respond]" "$cfg_incl_path"
         # echo "Including [respond] to $cfg_incl_path successfully complete"
-        sudo service klipper start
+        sudo systemctl klipper start
     else
         echo "Including [respond] aborted, [respond] already exists in $cfg_incl_path"
     fi
@@ -60,18 +61,18 @@ blk_path=~/printer_data/config/moonraker.conf
 # Добавление блока обновления в moonraker.conf
 if [ -f "$blk_path" ]; then
     if ! grep -q "^\[update_manager $repo\]$" "$blk_path"; then
-        read -p " Do you want to install updater? (y/n): " answer
+        read -rp " Do you want to install updater? \(y\/n\): " answer
         if [ "$answer" != "${answer#[Yy]}" ]; then
-        sudo service moonraker stop
-        sed -i "\$a \ " "$blk_path"
+        sudo systemctl moonraker stop
+        sed -i "\$a" "$blk_path"
         sed -i "\$a [update_manager $repo]" "$blk_path"
         sed -i "\$a type: git_repo" "$blk_path"
         sed -i "\$a path: $repo_path" "$blk_path"
         sed -i "\$a origin: https://github.com/Bradford1040/$repo.git" "$blk_path"
         sed -i "\$a primary_branch: main" "$blk_path"
-        sed -i "\$a managed_services: klipper" "$blk_path"
+        sed -i "\$a managed_systemctls: klipper" "$blk_path"
         # echo "Including [update_manager] to $blk_path successfully complete"
-        sudo service moonraker start
+        sudo systemctl moonraker start
         else
         echo "Installing updater aborted"
         fi
@@ -83,6 +84,7 @@ fi
 sudo apt update
 sudo apt-get install python3-venv libatlas-base-dev libopenblas-dev
 # Reuse system libraries
-python3 -m venv --system-site-packages $repo_path/.venv
-source $repo_path/.venv/bin/activate
-pip install -r $repo_path/requirements.txt
+python3 -m venv --system-site-packages "$repo_path"/.venv
+# shellcheck disable=SC1091
+source "$repo_path"/.venv/bin/activate
+pip install -r "$repo_path"/requirements.txt
